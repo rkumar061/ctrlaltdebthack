@@ -14,18 +14,6 @@ def create_table():
 
 
 
-@app.route("/login", methods=['GET', 'POST'])
-def main():
-    
-    if request.method == 'POST':
-        data = request.json
-        email = data['email']
-        password = data['password']
-        user = UserModel.query.filter_by(email=email).first()
-        if user and user.password == password:
-            return jsonify({"message": "success", "name": user.name, "email": user.email})
-        else:
-            return jsonify({"message": "fail"})
 
 
 
@@ -40,10 +28,29 @@ def create():
         email = data['email']
         password = data['password']
         name = data['name']
-        user = UserModel(name = name, email = email, password = password)
-        db.session.add(user)
-        db.session.commit()
-        return jsonify({"email":email,"created":True})
+        role = data['role']
+        user = UserModel.query.filter_by(email=email).first()
+        if user:
+            return jsonify({"message": "fail"})
+        else:
+            user = UserModel(name = name, email = email, password = password,role=role)
+            db.session.add(user)
+            db.session.commit()
+            return jsonify({"email":email,"created":True})
+            
+
+@app.route("/login", methods=['GET', 'POST'])
+def main():
+    
+    if request.method == 'POST':
+        data = request.json
+        email = data['email']
+        password = data['password']
+        user = UserModel.query.filter_by(email=email).first()
+        if user and user.password == password:
+            return jsonify({"message": "success", "name": user.name, "email": user.email, "role": user.role})
+        else:
+            return jsonify({"message": "fail"})
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8000, debug=True)

@@ -9,10 +9,13 @@ class UserModel(db.Model):
     name = db.Column(db.String())
     email = db.Column(db.String())
     password = db.Column(db.String())
-    def __init__(self, name, email, password):
+    role = db.Column(db.String())
+    def __init__(self, name, email, password,role):
         self.name = name
         self.email = email
         self.password = password
+        self.role = role
+        
     
  
     def __repr__(self):
